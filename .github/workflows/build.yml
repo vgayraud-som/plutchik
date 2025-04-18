@@ -1,32 +1,28 @@
-name: Build UMD Version
+name: Build UMD version
 
 on:
   push:
-    branches: [main]
-    paths:
-      - 'src/**'
+    branches:
+      - main
+  workflow_dispatch: # allows manual run
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2
 
-      - name: Install Node.js & dependencies
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: 18
 
-      - run: npm install
-
-      - name: Install Rollup & build
+      - name: Install dependencies
         run: |
+          npm install
           npm install --save-dev rollup rollup-plugin-node-resolve rollup-plugin-commonjs
-          npx rollup -c
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: build
-          path: dist/plutchik.umd.js
+      - name: Build with Rollup
+        run: npx rollup -c
