@@ -1,28 +1,40 @@
-name: Build UMD version
+name: Build and Commit UMD Bundle
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch: # allows manual run
+  workflow_dispatch: # allows manual runs from the GitHub Actions tab
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # 🚨 allows pushing back to main
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: '18'
 
       - name: Install dependencies
         run: |
           npm install
           npm install --save-dev rollup rollup-plugin-node-resolve rollup-plugin-commonjs
 
-      - name: Build with Rollup
+      - name: Build UMD bundle
         run: npx rollup -c
+
+      - name: Commit UMD build to main
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add dist/plutchik.umd.js
+
+          git diff --cached --quiet dist/plutchik.umd.js || git commit -m "build: commit UMD bundle [skip ci]"
+          git push origin main
