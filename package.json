@@ -1,0 +1,14 @@
+{
+  "name": "plutchik",
+  "version": "1.0.0",
+  "description": "Plutchik wheel UMD build",
+  "main": "dist/plutchik.umd.js",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "devDependencies": {
+    "rollup": "^2.79.1",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0"
+  }
+}
